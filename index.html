@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>やさしいタイピング</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <p class="eyebrow">TOUCH TYPING</p>
+        <h1>やさしいタイピング</h1>
+        <p class="lead">一文字から、ことばへ。正しい指で押してみよう。</p>
+      </header>
+
+      <section id="setup" class="setup" aria-label="練習メニュー">
+        <section class="panel category" aria-labelledby="mode-title">
+          <div class="category-heading">
+            <div>
+              <p class="category-label">STEP 1</p>
+              <h2 id="mode-title">1文字タイピング</h2>
+              <p>練習したい指やキーの段を選びます。</p>
+            </div>
+          </div>
+          <div class="modes" role="radiogroup" aria-label="練習モード">
+            <button class="mode is-selected" data-mode="index" role="radio" aria-checked="true"><span>人差し指</span><small>R T F G V B ・ Y U H J N M</small></button>
+            <button class="mode" data-mode="middle" role="radio" aria-checked="false"><span>中指</span><small>E D C ・ I K ,</small></button>
+            <button class="mode" data-mode="ring" role="radio" aria-checked="false"><span>薬指</span><small>W S X ・ O L .</small></button>
+            <button class="mode" data-mode="little" role="radio" aria-checked="false"><span>小指</span><small>Q A Z ・ P ; /</small></button>
+            <button class="mode" data-mode="home" role="radio" aria-checked="false"><span>中段</span><small>A S D F G H J K L ;</small></button>
+            <button class="mode" data-mode="top" role="radio" aria-checked="false"><span>上段</span><small>Q W E R T Y U I O P</small></button>
+            <button class="mode" data-mode="bottom" role="radio" aria-checked="false"><span>下段</span><small>Z X C V B N M , . /</small></button>
+            <button class="mode" data-mode="all" role="radio" aria-checked="false"><span>全部まぜる</span><small>アルファベットと記号</small></button>
+          </div>
+          <button id="start" class="primary">30問スタート</button>
+        </section>
+
+        <section class="panel category japanese-menu" aria-labelledby="japanese-menu-title">
+          <div class="category-heading">
+            <div>
+              <p class="category-label">STEP 2</p>
+              <h2 id="japanese-menu-title">日本語練習</h2>
+              <p>仕事の基本単語や定型表現を、ローマ字で入力します。</p>
+            </div>
+          </div>
+          <button id="start-japanese" class="secondary">日本語練習</button>
+        </section>
+      </section>
+
+      <section id="practice" class="practice" hidden aria-live="polite">
+        <div class="status"><span id="progress">1 / 30</span><span>ミス <strong id="misses">0</strong></span></div>
+        <div id="target-wrap" class="target-wrap"><div id="target" class="target" aria-label="入力する文字">F</div></div>
+        <div class="hands" aria-hidden="true">
+          <div class="hand hand-left">
+            <span class="finger little" data-finger="left-little"></span><span class="finger ring" data-finger="left-ring"></span><span class="finger middle" data-finger="left-middle"></span><span class="finger index" data-finger="left-index"></span><span class="finger thumb" data-finger="left-thumb"></span>
+          </div>
+          <div class="hand hand-right">
+            <span class="finger thumb" data-finger="right-thumb"></span><span class="finger index" data-finger="right-index"></span><span class="finger middle" data-finger="right-middle"></span><span class="finger ring" data-finger="right-ring"></span><span class="finger little" data-finger="right-little"></span>
+          </div>
+        </div>
+        <p id="hint" class="sr-only">左手の人差し指</p>
+        <p class="subhint">キーボードを見ずに入力</p>
+      </section>
+
+      <section id="result" class="panel result" hidden aria-live="polite">
+        <p class="eyebrow">FINISH</p>
+        <h2>おつかれさまでした</h2>
+        <div class="score">
+          <div><strong id="accuracy">100%</strong><span>正確率</span></div>
+          <div><strong id="average-response">0.00秒</strong><span>平均反応</span></div>
+          <div><strong id="time">0.0秒</strong><span>タイム</span></div>
+          <div><strong id="result-misses">0</strong><span>ミス</span></div>
+        </div>
+        <p id="weak-keys" class="weak-keys"></p>
+        <div class="result-actions">
+          <button id="to-japanese" class="primary">日本語練習へ</button>
+          <button id="retry" class="primary">もう一度</button>
+          <button id="change" class="secondary">モードを変える</button>
+        </div>
+      </section>
+
+      <section id="japanese-practice" class="japanese-practice" hidden aria-live="polite">
+        <div class="status"><span id="jp-progress">1 / 20</span><span>ミス <strong id="jp-misses">0</strong></span></div>
+        <div id="jp-card" class="jp-card">
+          <p id="jp-text" class="jp-text">会議</p>
+          <p id="jp-romaji" class="jp-romaji" aria-label="ローマ字"></p>
+        </div>
+        <div class="hands jp-hands" aria-hidden="true">
+          <div class="hand hand-left">
+            <span class="finger little" data-jp-finger="left-little"></span><span class="finger ring" data-jp-finger="left-ring"></span><span class="finger middle" data-jp-finger="left-middle"></span><span class="finger index" data-jp-finger="left-index"></span><span class="finger thumb" data-jp-finger="left-thumb"></span>
+          </div>
+          <div class="hand hand-right">
+            <span class="finger thumb" data-jp-finger="right-thumb"></span><span class="finger index" data-jp-finger="right-index"></span><span class="finger middle" data-jp-finger="right-middle"></span><span class="finger ring" data-jp-finger="right-ring"></span><span class="finger little" data-jp-finger="right-little"></span>
+          </div>
+        </div>
+        <p class="subhint">日本語入力をオフにして入力・単語の間は自動で進みます</p>
+      </section>
+
+      <section id="japanese-result" class="panel result" hidden aria-live="polite">
+        <p class="eyebrow">JAPANESE FINISH</p>
+        <h2>日本語練習クリア</h2>
+        <div class="score">
+          <div><strong id="jp-wpm">0</strong><span>WPM</span></div>
+          <div><strong id="jp-accuracy">100%</strong><span>正確率</span></div>
+          <div><strong id="jp-time">0.0秒</strong><span>タイム</span></div>
+          <div><strong id="jp-result-misses">0</strong><span>ミス</span></div>
+        </div>
+        <div class="result-actions">
+          <button id="jp-retry" class="primary">もう一度</button>
+          <button id="jp-back" class="secondary">最初に戻る</button>
+        </div>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
