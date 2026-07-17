@@ -15,6 +15,19 @@
       </header>
 
       <section id="setup" class="setup" aria-label="練習メニュー">
+        <aside class="intro" aria-labelledby="intro-title">
+          <h2 id="intro-title">タッチタイピングとは？</h2>
+          <p>キーボードを見ずに、決められた指で文字を入力する方法です。キーごとに使う指が決まっています。はじめはゆっくりで大丈夫。画面に表示される指を意識しながら、少しずつキーの位置を覚えましょう。</p>
+        </aside>
+
+        <section class="panel tutorial-menu" aria-labelledby="tutorial-menu-title">
+          <div>
+            <p class="category-label">初めての方へ</p>
+            <h2 id="tutorial-menu-title">ホームポジションを覚える</h2>
+            <p>FとJの突起を手がかりに、指の基本位置を体験します。</p>
+          </div>
+          <button id="start-tutorial" class="primary">チュートリアル</button>
+        </section>
         <section class="panel category" aria-labelledby="mode-title">
           <div class="category-heading">
             <div>
@@ -46,6 +59,33 @@
           </div>
           <button id="start-japanese" class="secondary">日本語練習</button>
         </section>
+      </section>
+
+      <section id="tutorial" class="tutorial" hidden aria-live="polite">
+        <div class="status">
+          <span id="tutorial-progress">ステップ 1 / 4</span>
+          <button id="tutorial-exit" class="text-button">メニューに戻る</button>
+        </div>
+        <div id="tutorial-card" class="tutorial-card">
+          <p class="category-label">HOME POSITION</p>
+          <h2 id="tutorial-title">Fの突起を探しましょう</h2>
+          <p id="tutorial-copy">左手の人差し指で、Fにある小さな突起を探します。見つけたら、そのままFを押してください。</p>
+          <div class="home-row" aria-label="キーボードの中段">
+            <span data-home-key="A">A</span><span data-home-key="S">S</span><span data-home-key="D">D</span><span data-home-key="F" class="bump">F</span><span data-home-key="G">G</span>
+            <i></i>
+            <span data-home-key="H">H</span><span data-home-key="J" class="bump">J</span><span data-home-key="K">K</span><span data-home-key="L">L</span><span data-home-key=";">;</span>
+          </div>
+          <p id="tutorial-task" class="tutorial-task"><strong>F</strong> を押してください</p>
+        </div>
+      </section>
+
+      <section id="tutorial-result" class="panel result" hidden aria-live="polite">
+        <p class="eyebrow">READY</p>
+        <h2>ホームポジションの準備完了</h2>
+        <p class="tutorial-result-copy">位置が分からなくなったら、いつでもFとJの突起に戻りましょう。</p>
+        <div class="result-actions">
+          <button id="tutorial-finish" class="primary">1文字練習へ</button>
+        </div>
       </section>
 
       <section id="practice" class="practice" hidden aria-live="polite">
