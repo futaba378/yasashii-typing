@@ -34,6 +34,12 @@ const FINGER_IDS = {
 };
 
 const QUESTION_COUNT = 30;
+const TUTORIAL_STEPS = [
+  { title: "Fの突起を探しましょう", copy: "左手の人差し指で、Fにある小さな突起を探します。見つけたら、そのままFを押してください。", expected: "F" },
+  { title: "Jの突起を探しましょう", copy: "右手の人差し指で、Jにある小さな突起を探します。FとJが、指を置くときの目印です。", expected: "J" },
+  { title: "中指を置きましょう", copy: "人差し指はFとJに置いたままです。左手の中指でD、右手の中指でKを順番に押してください。", expected: "DK" },
+  { title: "指を横に並べましょう", copy: "左手はA・S・D・F、右手はJ・K・L・; に並びます。表示された順番に押してみましょう。", expected: "ASDFJKL;" }
+];
 const JAPANESE_PROMPTS = [
   { text: "会議", parts: [["ka"], ["i"], ["gi"]] },
   { text: "資料", parts: [["shi", "si"], ["ryo"], ["u"]] },
@@ -63,6 +69,8 @@ let question = 0;
 let misses = 0;
 let missByKey = {};
 let acceptingInput = false;
+let tutorialStep = 0;
+let tutorialPosition = 0;
 let questionShownAt = 0;
 let totalResponseTime = 0;
 let practiceType = "letter";
@@ -87,6 +95,9 @@ const hint = document.querySelector("#hint");
 const japanesePractice = document.querySelector("#japanese-practice");
 const japaneseResult = document.querySelector("#japanese-result");
 const jpCard = document.querySelector("#jp-card");
+const tutorial = document.querySelector("#tutorial");
+const tutorialResult = document.querySelector("#tutorial-result");
+const tutorialCard = document.querySelector("#tutorial-card");
 
 document.querySelectorAll(".mode").forEach((button) => {
   button.addEventListener("click", () => {
@@ -101,6 +112,9 @@ document.querySelectorAll(".mode").forEach((button) => {
 });
 
 document.querySelector("#start").addEventListener("click", startGame);
+document.querySelector("#start-tutorial").addEventListener("click", startTutorial);
+document.querySelector("#tutorial-exit").addEventListener("click", showSetup);
+document.querySelector("#tutorial-finish").addEventListener("click", showSetup);
 document.querySelector("#start-japanese").addEventListener("click", startJapanese);
 document.querySelector("#to-japanese").addEventListener("click", startJapanese);
 document.querySelector("#retry").addEventListener("click", startGame);
@@ -118,6 +132,8 @@ function startGame() {
   missesText.textContent = "0";
   setup.hidden = true;
   result.hidden = true;
+  tutorial.hidden = true;
+  tutorialResult.hidden = true;
   japanesePractice.hidden = true;
   japaneseResult.hidden = true;
   practice.hidden = false;
@@ -144,6 +160,10 @@ function nextQuestion() {
 
 function handleKeydown(event) {
   if (!acceptingInput || event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
+  if (practiceType === "tutorial") {
+    handleTutorialKeydown(event);
+    return;
+  }
   if (practiceType === "japanese") {
     handleJapaneseKeydown(event);
     return;
@@ -203,7 +223,78 @@ function showSetup() {
   practice.hidden = true;
   japanesePractice.hidden = true;
   japaneseResult.hidden = true;
+  tutorial.hidden = true;
+  tutorialResult.hidden = true;
   setup.hidden = false;
+}
+
+function startTutorial() {
+  practiceType = "tutorial";
+  tutorialStep = 0;
+  tutorialPosition = 0;
+  setup.hidden = true;
+  practice.hidden = true;
+  result.hidden = true;
+  japanesePractice.hidden = true;
+  japaneseResult.hidden = true;
+  tutorialResult.hidden = true;
+  tutorial.hidden = false;
+  acceptingInput = true;
+  showTutorialStep();
+}
+
+function showTutorialStep() {
+  const step = TUTORIAL_STEPS[tutorialStep];
+  tutorialPosition = 0;
+  document.querySelector("#tutorial-progress").textContent = `ステップ ${tutorialStep + 1} / ${TUTORIAL_STEPS.length}`;
+  document.querySelector("#tutorial-title").textContent = step.title;
+  document.querySelector("#tutorial-copy").textContent = step.copy;
+  tutorialCard.classList.remove("is-wrong");
+  renderTutorialStep();
+}
+
+function renderTutorialStep() {
+  const step = TUTORIAL_STEPS[tutorialStep];
+  const task = document.querySelector("#tutorial-task");
+  task.replaceChildren();
+  const keys = document.createElement("strong");
+  keys.textContent = step.expected;
+  task.append(keys, " を順番に押してください");
+  document.querySelectorAll("[data-home-key]").forEach((key) => {
+    const keyIndex = step.expected.indexOf(key.dataset.homeKey);
+    key.classList.toggle("is-current", key.dataset.homeKey === step.expected[tutorialPosition]);
+    key.classList.toggle("is-done", keyIndex >= 0 && keyIndex < tutorialPosition);
+  });
+}
+
+function handleTutorialKeydown(event) {
+  const pressed = event.code.startsWith("Key") ? event.code.replace("Key", "") : CODE_CHAR[event.code];
+  if (!pressed) return;
+  event.preventDefault();
+  const expected = TUTORIAL_STEPS[tutorialStep].expected[tutorialPosition];
+  tutorialCard.classList.remove("is-wrong");
+  void tutorialCard.offsetWidth;
+
+  if (pressed !== expected) {
+    tutorialCard.classList.add("is-wrong");
+    return;
+  }
+
+  tutorialPosition += 1;
+  renderTutorialStep();
+  if (tutorialPosition >= TUTORIAL_STEPS[tutorialStep].expected.length) {
+    acceptingInput = false;
+    window.setTimeout(() => {
+      if (tutorialStep >= TUTORIAL_STEPS.length - 1) {
+        tutorial.hidden = true;
+        tutorialResult.hidden = false;
+      } else {
+        tutorialStep += 1;
+        showTutorialStep();
+        acceptingInput = true;
+      }
+    }, 350);
+  }
 }
 
 function startJapanese() {
@@ -217,6 +308,8 @@ function startJapanese() {
   practice.hidden = true;
   result.hidden = true;
   japaneseResult.hidden = true;
+  tutorial.hidden = true;
+  tutorialResult.hidden = true;
   japanesePractice.hidden = false;
   document.querySelector("#jp-misses").textContent = "0";
   acceptingInput = true;
